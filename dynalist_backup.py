@@ -16,22 +16,22 @@ import sys
 
 # API token location. First file found is used.
 API_TOKEN_FILES = [
-    os.path.expanduser('~/.config/dynalist-saver-token.ini'),
-    os.path.expanduser('~/.config/secret/dynalist-saver-token.ini'),
+    os.path.expanduser('~/.config/dynalist-backup-token.ini'),
+    os.path.expanduser('~/.config/secret/dynalist-backup-token.ini'),
     '/run/user/%d/dynalist-token' % os.getuid()
 ]
 
 
 # Directory with data. First directory which is found is used.
 DATA_DIRECTORIES = [
-    os.path.expanduser('~/.local/share/dynalist-saver'),
-    os.path.expanduser('~/.dynalist-saver'),    
-    os.path.expanduser('~/.config/dynalist-saver'),    
+    os.path.expanduser('~/.local/share/dynalist-backup'),
+    os.path.expanduser('~/.dynalist-backup'),    
+    os.path.expanduser('~/.config/dynalist-backup'),    
     '/tmp/dynalist-export'
 ]
 
 # Cache directory, used only when --cache is passed.
-API_CACHE_PREFIX = '/tmp/dynalist-saver-cache/cache-'
+API_CACHE_PREFIX = '/tmp/dynalist-backup-cache/cache-'
 
 class DynalistApi:
     """
@@ -336,7 +336,7 @@ class FileWriter:
 
     def git_commit(self, *, title='', dry_run):
         """If there are any changes, commit them"""
-        changes = subprocess.check_output('git status --porcelain'.split(), encoding='utf-8', cwd=self.datadir).splitlines()
+        changes = subprocess.check_output('git status --porcelain'.split(), cwd=self.datadir).decode('utf-8').splitlines()
         if not changes:
             self.logger.debug('git up to date, not committing')
             return

@@ -1,4 +1,4 @@
-dynalist-saver
+dynalist-backup
 --------------
 Backup your http://dynalist.io data by continuously exporting it to local git repo.
 
@@ -14,7 +14,7 @@ How to use?
 -----------
 - check out the code
 - Go to your developer page (https://dynalist.io/developer) and get your secret token.
-    - Place it into ~/.config/dynalist-saver-token.txt
+    - Place it into ~/.config/dynalist-backup-token.txt
 - Create output directory:
 ```
 mkdir ~/.local/dynalist-data   # other locations work as well, see source
@@ -22,16 +22,19 @@ git init ~/.local/dynalist-data
 ```
 - Run it, and make sure it works:
 ```
-./dynalist-saver.py -v
+./dynalist_backup.py -v
 ```
 - Add it to cron. You can do it as often as you want (subject to your PC's CPU usage), but the API is limited by 6 requests per minute.
 ```
 crontab -e
-# TODO insert line here
 ```
+then insert a line like below (example is to run every 30 minutes)
+```
+14-59/30  *  * * *    timeout 25m PATH-TO/dynalist-backup/dynalist_backup.py --commit
+```
+
 - IMPORTANT: Make some changes in web interface, wait a while, and check to make sure they appear in git,
   to make sure the entire machiney works correctly.
-
 
 Note the logging is designed for "cron". Without "-v" option:
 
@@ -48,13 +51,13 @@ File formats
 
 FAQ
 ---
-- Q: Isn't this built-in?
+- Q: Isn't this built-in into the website?
     - A: not really:
          - There is "Export data" option, but it is one time only
          - There is "note history" option in Pro plan, but it only helps with old versions, it won't help if your account is locked out or hacked.
 - Q: How do I restore it?
     - A: This is currently not implemented. You might be able to import OPML files?
-         (To elaborate, I don't anticipate ever needing to restore this into dynalist.io account):
+    - (To elaborate, I don't anticipate ever needing to restore this into dynalist.io account):
          - If the account is locked out / hacked badly enough that I lose all the data, I'll likely want to switch to a different service anyway.
          - If the entire service goes down, there will be nowhere to restore it.
          - So your git tree contains .txt files (in case you use the "last version" snapshot directly from disk, with no UI), and "json"
